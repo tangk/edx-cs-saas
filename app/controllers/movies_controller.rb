@@ -2,12 +2,26 @@ class MoviesController < ApplicationController
 
   def show
     id = params[:id] # retrieve movie ID from URI route
+    if id =~ /\Atitle/
+      flash[:sortby] = id
+      redirect_to movies_path
+    elsif id =~ /\Arelease_date/
+      flash[:sortby] = id
+      redirect_to movies_path
+    else
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
+    end
   end
 
   def index
-    @movies = Movie.all
+    if flash[:sortby] =~ /\Atitle/
+      @movies = Movie.order("title ASC").all
+    elsif flash[:sortby] =~ /\Arelease_date/
+      @movies = Movie.order("release_date ASC").all
+    else
+      @movies = Movie.all
+    end
   end
 
   def new
