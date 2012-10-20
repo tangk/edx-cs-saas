@@ -15,6 +15,7 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @all_ratings = Movie.uniq.pluck(:rating)
     if flash[:sortby] =~ /\Atitle/
       @movies = Movie.order("title ASC").all
     elsif flash[:sortby] =~ /\Arelease_date/
